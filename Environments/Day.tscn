@@ -1,0 +1,85 @@
+[gd_scene format=3 uid="uid://bxe5mrkpnkirw"]
+
+[ext_resource type="PackedScene" uid="uid://cohb8et7ekgcb" path="res://Assets/platform.tscn" id="1_33n4h"]
+[ext_resource type="Script" uid="uid://ck231p4rb1d66" path="res://scripts/game.gd" id="1_j5byn"]
+[ext_resource type="PackedScene" uid="uid://cfmoqxpbs5oic" path="res://Assets/player.tscn" id="2_xnw57"]
+[ext_resource type="PackedScene" uid="uid://dibtc3183l1dc" path="res://Assets/moving_platform.tscn" id="4_j5byn"]
+[ext_resource type="PackedScene" uid="uid://bwyoo6mw17jnp" path="res://Assets/long_platform.tscn" id="5_dk53w"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_xnw57"]
+sky_top_color = Color(0, 0.835434, 0.843491, 1)
+sky_horizon_color = Color(0.891807, 1.1146, 1.29163, 1)
+ground_bottom_color = Color(0, 0.514252, 0.547699, 1)
+ground_horizon_color = Color(0.630295, 0.88031, 1, 1)
+ground_curve = 0.400853
+
+[sub_resource type="Sky" id="Sky_ws0jp"]
+sky_material = SubResource("ProceduralSkyMaterial_xnw57")
+
+[sub_resource type="Environment" id="Environment_j5byn"]
+background_mode = 2
+sky = SubResource("Sky_ws0jp")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dk53w"]
+size = Vector3(100, 1, 100)
+
+[node name="Game" type="Node3D" unique_id=1665178821]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.590353, 0, -2.5527163)
+script = ExtResource("1_j5byn")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=875014526]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 8.26385, -5.87747)
+light_color = Color(1, 0.721237, 0.536575, 1)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1778076388]
+environment = SubResource("Environment_j5byn")
+
+[node name="Platform" parent="." unique_id=1014440337 instance=ExtResource("1_33n4h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8615808, -8.66884)
+collision_layer = 2
+
+[node name="Platform3" parent="." unique_id=1845081510 instance=ExtResource("1_33n4h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7854962, -5.8329306)
+collision_layer = 2
+
+[node name="Platform4" parent="." unique_id=456537848 instance=ExtResource("1_33n4h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6872, 5.27464)
+collision_layer = 2
+
+[node name="Player" parent="." unique_id=2035407523 instance=ExtResource("2_xnw57")]
+transform = Transform3D(0.29999995, 0, 0, 0, 0.29986307, 0.009062129, 0, -0.009062123, 0.29986307, 0, 2.5467224, 5.481459)
+wall_min_slide_angle = 0.052770313
+JUMP_VELOCITY = 2.0
+
+[node name="Pivot" type="Marker3D" parent="Player" unique_id=2048655079]
+transform = Transform3D(37.6293, -48.37839, 107.168724, 3.5518215, 112.93922, 49.73618, -117.52868, -12.076246, 35.815407, 36.569378, 14.739129, -8.19444)
+
+[node name="Camera3D" type="Camera3D" parent="Player/Pivot" unique_id=392398036]
+transform = Transform3D(5.672577e-06, 9.790572e-06, -1.6105529e-05, -7.754832e-06, 1.6541935e-05, 7.324514e-06, 1.7178658e-05, 4.234453e-06, 8.624671e-06, -0.4010737, 0.15380055, -0.12828681)
+
+[node name="MovingPlatform" parent="." unique_id=1124030163 instance=ExtResource("4_j5byn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -13.689578)
+
+[node name="MovingPlatform" parent="MovingPlatform" index="0"]
+collision_layer = 2
+
+[node name="AnimationPlayer" parent="MovingPlatform" index="1"]
+autoplay = &"elevator"
+
+[node name="Platform2" parent="." unique_id=1817314398 instance=ExtResource("5_dk53w")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+collision_layer = 2
+
+[node name="FallSensor" type="Area3D" parent="." unique_id=1049958564]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FallSensor" unique_id=322207166]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.7605414, 0)
+shape = SubResource("BoxShape3D_dk53w")
+
+[connection signal="body_entered" from="FallSensor" to="." method="_on_body_entered"]
+
+[editable path="MovingPlatform"]
